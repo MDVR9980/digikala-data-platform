@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}فروشگاه اینترنتی دیجی‌کالا{% endblock %}</title>
+    <!-- فونت وزیرمتن -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        digikala: { red: '#ef4056', dark: '#d63848', light: '#f56b7a' }
+                    },
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    boxShadow: { 'digi': '0 2px 8px 0 rgba(0,0,0,0.08)' }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f9fafb; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- تزریق هدر سایت -->
+    {% include 'components/header.html' %}
+
+    <!-- محتوای متغیر صفحات -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- تزریق فوتر سایت -->
+    {% include 'components/footer.html' %}
+
+    <!-- اسکریپت مرکزی -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

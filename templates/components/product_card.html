@@ -1,0 +1,16 @@
+<a href="/product/{{ product.id }}" class="shrink-0 w-40 md:w-48 bg-white p-3 hover:shadow-lg transition-shadow block relative rounded-xl">
+    <div class="relative mb-3 flex justify-center">
+        <!-- از آنجایی که در مدل دیتابیس فعلا فیلد image نداریم، با استفاده از ID محصول عکس‌های رندوم و ثابت تولید می‌کنیم تا ظاهر عالی باشد -->
+        <img src="https://picsum.photos/seed/{{ product.id }}/300/300" alt="{{ product.title }}" class="w-32 h-32 object-contain rounded-lg">
+    </div>
+    <h3 class="text-xs text-gray-700 leading-6 mb-4 line-clamp-2 h-10">{{ product.title }}</h3>
+    <div class="flex items-center justify-between mb-1">
+        <!-- در دیتابیس اصلی شما فیلد تخفیف در جدول SellerProduct است اما برای زیبایی اینجا یک مدج اضافه کردیم -->
+        <span class="bg-digikala-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">ویژه</span>
+        <div class="flex items-center gap-1 text-gray-800">
+            <!-- از کلاس persian-num استفاده کردیم که با JS تبدیل شود -->
+            <span class="text-sm font-bold persian-num">{{ product.price }}</span>
+            <span class="text-[10px]">تومان</span>
+        </div>
+    </div>
+</a>

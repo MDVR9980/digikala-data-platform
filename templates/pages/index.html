@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="space-y-10 mt-6 pb-10">
+    
+    <!-- 1. Hero Banner -->
+    <section class="container mx-auto px-4">
+        <a href="#" class="block relative h-48 sm:h-64 lg:h-[400px] rounded-2xl overflow-hidden shadow-digi group">
+            <img src="https://dkstatics-public.digikala.com/digikala-adservice-banners/a4778be9ec3da2b8b9dc17a780b67bc5d1fffa7f_1713000677.jpg" alt="Banner" class="w-full h-full object-cover">
+        </a>
+    </section>
+
+    <!-- 2. Amazing Sales (داینامیک از دیتابیس) -->
+    <section class="container mx-auto px-4">
+        <div class="bg-digikala-red rounded-2xl overflow-hidden shadow-digi flex py-4 pr-4">
+            <!-- Sidebar -->
+            <div class="shrink-0 w-32 md:w-44 flex flex-col items-center justify-center gap-4 text-white text-center ml-2 border-l border-white/20 pl-4">
+                <img src="https://www.digikala.com/statics/img/svg/specialCarousel/Amazings.svg" alt="شگفت انگیز" class="w-24 md:w-28">
+                <img src="https://www.digikala.com/statics/img/png/specialCarousel/box.png" alt="Box" class="w-16 md:w-24">
+                <a href="#" class="text-sm font-bold flex items-center gap-1 hover:text-gray-200">مشاهده همه <i data-lucide="chevron-left" class="w-4 h-4"></i></a>
+            </div>
+            
+            <!-- Products Carousel (لوپ زدن روی دیتابیس) -->
+            <div class="flex gap-2 overflow-x-auto scrollbar-hide flex-1 pl-4 items-center">
+                {% if products %}
+                    {% for product in products %}
+                        {% include 'components/product_card.html' %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-white mx-auto">هیچ محصولی یافت نشد. لطفا اسکریپت seed.py را اجرا کنید.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Category Banner (استاتیک برای زیبایی) -->
+    <section class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <img src="https://dkstatics-public.digikala.com/digikala-adservice-banners/f88f110756778f9fdebd6603a11dff722a0817c1_1712484439.jpg" class="rounded-2xl w-full">
+            <img src="https://dkstatics-public.digikala.com/digikala-adservice-banners/0a9cde99435b6c33e8b09ff44b6eb3595f543166_1712492160.jpg" class="rounded-2xl w-full">
+        </div>
+    </section>
+</div>
+{% endblock %}

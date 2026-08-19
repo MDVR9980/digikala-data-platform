@@ -1,0 +1,128 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ product.title }} | دیجی‌کالا{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-gray-500 mb-6">
+        <a href="/" class="hover:text-digikala-red">دیجی‌کالا</a>
+        <span class="text-gray-300">/</span>
+        <span class="text-gray-700">{{ product.title }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- راست: تصویر محصول -->
+        <div class="lg:col-span-4">
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col items-center sticky top-28">
+                <img src="https://picsum.photos/seed/{{ product.id }}/800/800" class="w-full max-w-[300px] object-contain mb-4 rounded-xl">
+            </div>
+        </div>
+
+        <!-- وسط: اطلاعات محصول -->
+        <div class="lg:col-span-5">
+            <h1 class="text-lg font-bold text-gray-900 mb-4 leading-8">{{ product.title }}</h1>
+            <div class="flex items-center gap-4 text-sm text-gray-500 mb-6 pb-6 border-b border-gray-100">
+                <span class="text-digikala-red font-bold">دسته‌بندی: {{ product.category.title if product.category else 'کالای عمومی' }}</span>
+                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span class="text-gray-600">تعداد نظرات: <span class="persian-num font-bold">{{ comments|length }}</span></span>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div class="flex items-center gap-2 mb-2 font-bold text-gray-700">
+                    <i data-lucide="info" class="w-5 h-5 text-gray-400"></i> توضیحات محصول:
+                </div>
+                <p class="text-sm text-gray-600 leading-8 text-justify">
+                    {{ product.description or 'توضیحات تکمیلی برای این محصول در دیتابیس ثبت نشده است. این کالا یکی از بهترین انتخاب‌های شما در دیجی‌کالا خواهد بود.' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- چپ: Buy Box -->
+        <div class="lg:col-span-3">
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 sticky top-28 shadow-sm">
+                
+                {% if sellers %}
+                    <!-- داینامیک از جدول SellerProduct -->
+                    <div class="flex items-center gap-3 pb-4 border-b border-gray-200">
+                        <i data-lucide="store" class="w-6 h-6 text-gray-700"></i>
+                        <div>
+                            <div class="text-sm font-bold text-gray-800">فروشنده: {{ sellers[0].seller_name }}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 py-4 border-b border-gray-200">
+                        <i data-lucide="check-circle-2" class="w-6 h-6 text-teal-500"></i>
+                        <span class="text-sm font-bold text-teal-600">موجودی: <span class="persian-num">{{ sellers[0].stock }}</span> عدد</span>
+                    </div>
+                    <div class="py-6 flex flex-col items-end">
+                        <div class="flex items-center gap-1 text-digikala-red">
+                            <span class="text-2xl font-extrabold persian-num">{{ sellers[0].price }}</span>
+                            <span class="text-sm">تومان</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- داینامیک از جدول Product (در صورت نبودن فروشنده) -->
+                    <div class="flex items-center gap-3 pb-4 border-b border-gray-200">
+                        <i data-lucide="store" class="w-6 h-6 text-gray-700"></i>
+                        <div class="text-sm font-bold text-gray-800">فروشنده: دیجی‌کالا</div>
+                    </div>
+                    <div class="py-6 flex flex-col items-end">
+                        <div class="flex items-center gap-1 text-digikala-red">
+                            <span class="text-2xl font-extrabold persian-num">{{ product.price }}</span>
+                            <span class="text-sm">تومان</span>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <button class="w-full bg-digikala-red text-white py-3.5 rounded-xl font-bold hover:bg-digikala-red-dark transition shadow-md">
+                    افزودن به سبد خرید
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تب ها -->
+    <div class="mt-12 bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="flex border-b border-gray-100 px-4">
+            <button onclick="switchTab('desc')" id="tab-desc" class="px-6 py-4 text-sm font-bold text-digikala-red border-b-4 border-digikala-red">معرفی</button>
+            <button onclick="switchTab('comments')" id="tab-comments" class="px-6 py-4 text-sm font-bold text-gray-500 border-b-4 border-transparent hover:text-digikala-red transition">دیدگاه‌ها</button>
+        </div>
+        
+        <div class="p-6 md:p-8">
+            <div id="content-desc" class="block max-w-4xl">
+                <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><div class="w-1 h-6 bg-digikala-red rounded-full"></div> معرفی محصول</h3>
+                <p class="text-sm text-gray-600 leading-loose text-justify">{{ product.description or 'این محصول از کیفیت بالایی برخوردار است.' }}</p>
+            </div>
+            
+            <div id="content-comments" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- فرم نظر -->
+                    <div class="md:col-span-1">
+                        <h4 class="font-bold text-gray-800 mb-2">شما هم درباره این کالا دیدگاه ثبت کنید</h4>
+                        <button class="w-full border border-digikala-red text-digikala-red rounded-lg py-2.5 text-sm font-bold hover:bg-red-50 transition">ثبت دیدگاه</button>
+                    </div>
+                    <!-- نظرات داینامیک از دیتابیس -->
+                    <div class="md:col-span-3 space-y-4">
+                        {% if comments %}
+                            {% for comment in comments %}
+                            <div class="border-b border-gray-100 pb-4 mb-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-bold persian-num">{{ comment.rate }}.0</span>
+                                    <span class="text-xs text-gray-400">• کاربر دیجی‌کالا</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-gray-800 mb-2">{{ comment.title or 'بدون عنوان' }}</h4>
+                                <p class="text-sm text-gray-600 leading-7">{{ comment.body }}</p>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-sm text-gray-500 py-8 bg-gray-50 rounded-xl">هنوز دیدگاهی برای این کالا ثبت نشده است.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

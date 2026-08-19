@@ -37,7 +37,7 @@ app = FastAPI(
 # =========================================================
 # ⚙️ تنظیمات مسیرهای استاتیک و قالب‌ها (HTML)
 # =========================================================
-# پیدا کردن مسیر اصلی پروژه (Root) با توجه به اینکه این فایل در src/api/main.py است
+# پیدا کردن مسیر اصلی پروژه (Root)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # متصل کردن پوشه static (واقع در روت پروژه)
@@ -46,27 +46,40 @@ app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="stat
 # تنظیمات Jinja2 برای پیدا کردن پوشه templates (واقع در روت پروژه)
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
+
 # =========================================================
-# 🖥️ روت‌های فرانت‌اند (UI - رندر صفحات HTML)
+# 🖥️ روت‌های فرانت‌اند (UI - رندر صفحات HTML بصورت SSR)
 # =========================================================
 @app.get("/", tags=["UI"])
-def render_home(request: Request):
-    # تغییر یافته به فرمت جدید FastAPI
-    return templates.TemplateResponse(request=request, name="index.html")
-
-@app.get("/product/{product_id}", tags=["UI"])
-def render_product_page(request: Request, product_id: int):
-    # تغییر یافته به فرمت جدید FastAPI
+def render_home(request: Request, db: Session = Depends(get_db)):
+    # دریافت داینامیک دیتا از دیتابیس برای نمایش در صفحه اصلی
+    products = db.query(Product).limit(15).all()
+    
     return templates.TemplateResponse(
         request=request, 
-        name="product.html", 
-        context={"product_id": product_id}
+        name="pages/index.html", 
+        context={"products": products}
     )
 
 @app.get("/product/{product_id}", tags=["UI"])
-def render_product_page(request: Request, product_id: int):
-    # ارسال product_id به قالب HTML تا با جاوااسکریپت دیتای آن واکشی شود
-    return templates.TemplateResponse("product.html", {"request": request, "product_id": product_id})
+def render_product_page(request: Request, product_id: int, db: Session = Depends(get_db)):
+    # دریافت کامل اطلاعات محصول، فروشندگان و نظرات از دیتابیس
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="محصول یافت نشد")
+        
+    sellers = db.query(SellerProduct).filter(SellerProduct.product_id == product_id).all()
+    comments = db.query(Comment).filter(Comment.product_id == product_id).all()
+    
+    return templates.TemplateResponse(
+        request=request, 
+        name="pages/product.html", 
+        context={
+            "product": product,
+            "sellers": sellers,
+            "comments": comments
+        }
+    )
 
 
 # =========================================================
