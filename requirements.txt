@@ -1,0 +1,12 @@
+pandas 
+sqlalchemy 
+psycopg2-binary 
+python-dotenv 
+fastapi 
+uvicorn
+email-validator
+sentence-transformers
+pgvector
+pytest
+pytest-cov
+httpx

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:15-alpine
+    container_name: digikala_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: digikala_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  web:
+    build: .
+    container_name: digikala_fastapi
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_USER: postgres
+      DB_PASS: 1234
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: digikala_db
+    volumes:
+      - ./logs:/app/logs
+volumes:
+  postgres_data:
